@@ -9,35 +9,43 @@ class OpenIdConnectAndroidiOS {
     required int popupWidth,
     required int popupHeight,
   }) async {
-    //Create the url
-
-    final result = await showDialog<String?>(
+    final result = await showGeneralDialog<String?>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) {
-        return AlertDialog(
-          actions: [
-            IconButton(
-              onPressed: () => Navigator.pop(dialogContext, null),
-              icon: Icon(Icons.close),
-            ),
-          ],
-          content: Container(
-            width:
-                min(popupWidth.toDouble(), MediaQuery.of(context).size.width),
-            height:
-                min(popupHeight.toDouble(), MediaQuery.of(context).size.height),
-            child: flutterWebView.WebView(
-              javascriptMode: flutterWebView.JavascriptMode.unrestricted,
-              initialUrl: authorizationUrl,
-              onPageFinished: (url) {
+      pageBuilder: (dialogContext, _, __) {
+        late final WebViewController controller = WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onPageStarted: (url) {
                 if (url.startsWith(redirectUrl)) {
                   Navigator.pop(dialogContext, url);
                 }
               },
+              onPageFinished: (url) {
+                print('###############################################');
+                print(url);
+                print('###############################################');
+                if (url.startsWith(redirectUrl)) {
+                  Navigator.pop(dialogContext, url);
+                }
+              },
+              onWebResourceError: (WebResourceError error) {},
+              onNavigationRequest: (NavigationRequest request) {
+                if (request.url.startsWith(redirectUrl)) {
+                  return NavigationDecision.prevent;
+                }
+                return NavigationDecision.navigate;
+              },
+            ),
+          )
+          ..loadRequest(Uri.parse(authorizationUrl));
+        return Scaffold(
+          body: SafeArea(
+            child: Stack(
+              children: [WebViewWidget(controller: controller)],
             ),
           ),
-          title: Text(title),
         );
       },
     );

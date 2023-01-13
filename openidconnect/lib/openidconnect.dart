@@ -13,7 +13,7 @@ import 'package:openidconnect_platform_interface/openidconnect_platform_interfac
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:retry/retry.dart';
-import 'package:webview_flutter/webview_flutter.dart' as flutterWebView;
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part './src/openidconnect_client.dart';
@@ -80,17 +80,27 @@ class OpenIdConnect {
     final uri = Uri.parse(request.configuration.authorizationEndpoint).replace(
       queryParameters: request.toMap(),
     );
-
-    //These are special cases for the various different platforms because of limitations in pubspec.yaml
+    print('#############');
+    print(uri);
+    print('#############');
+    //These are special cases for the various different platforms because of limitations in pubspec.yamlopenid
     if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-      responseUrl = await OpenIdConnectAndroidiOS.authorizeInteractive(
-        context: context,
-        title: title,
-        authorizationUrl: uri.toString(),
-        redirectUrl: request.redirectUrl,
-        popupHeight: request.popupHeight,
-        popupWidth: request.popupWidth,
-      );
+      responseUrl = '';
+      try {
+        responseUrl = await OpenIdConnectAndroidiOS.authorizeInteractive(
+          context: context,
+          title: title,
+          authorizationUrl: uri.toString(),
+          redirectUrl: request.redirectUrl,
+          popupHeight: request.popupHeight,
+          popupWidth: request.popupWidth,
+        );
+      } on AuthenticationException catch (e) {
+        final storage = FlutterSecureStorage();
+        await storage.delete(key: CODE_VERIFIER_STORAGE_KEY);
+        await storage.delete(key: CODE_CHALLENGE_STORAGE_KEY);
+        return null;
+      }
     } else if (kIsWeb) {
       final storage = FlutterSecureStorage();
       await storage.write(
