@@ -79,6 +79,8 @@ class OpenIdConnectClient {
 
       if (response != null)
         _identity = OpenIdIdentity.fromAuthorizationResponse(response);
+
+      if (_identity != null) await _identity!.save();
     }
 
     if (_identity == null) _identity = await OpenIdIdentity.load();
@@ -279,6 +281,12 @@ class OpenIdConnectClient {
           state: _identity!.state,
         ),
       );
+
+      // Clear local storage since we have logged out!
+      if (this._identity != null) {
+        await OpenIdIdentity.clear();
+        this._identity = null;
+      }
     } on Exception {}
 
     _raiseEvent(AuthEvent(AuthEventTypes.NotLoggedIn));
