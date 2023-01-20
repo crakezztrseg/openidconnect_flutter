@@ -13,7 +13,7 @@ class OpenIdConnectAndroidiOS {
       context: context,
       barrierDismissible: false,
       pageBuilder: (dialogContext, _, __) {
-        late final NavigationDelegate _navigationDelegate = NavigationDelegate(
+        final NavigationDelegate _navigationDelegate = NavigationDelegate(
           onPageFinished: (url) {
             print('###############################################');
             print(url);
@@ -30,6 +30,7 @@ class OpenIdConnectAndroidiOS {
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith(redirectUrl)) {
+              Navigator.of(context, rootNavigator: true).pop(request.url);
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
