@@ -13,32 +13,31 @@ class OpenIdConnectAndroidiOS {
       context: context,
       barrierDismissible: false,
       pageBuilder: (dialogContext, _, __) {
+        late final NavigationDelegate _navigationDelegate = NavigationDelegate(
+          onPageFinished: (url) {
+            print('###############################################');
+            print(url);
+            print('###############################################');
+            if (url.startsWith(redirectUrl)) {
+              Navigator.pop(dialogContext, url);
+            }
+          },
+          onPageStarted: (url) {
+            if (url.startsWith(redirectUrl)) {
+              Navigator.pop(dialogContext, url);
+            }
+          },
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith(redirectUrl)) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        );
         late final WebViewController controller = WebViewController()
           ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..setNavigationDelegate(
-            NavigationDelegate(
-              onPageStarted: (url) {
-                if (url.startsWith(redirectUrl)) {
-                  Navigator.pop(dialogContext, url);
-                }
-              },
-              onPageFinished: (url) {
-                print('###############################################');
-                print(url);
-                print('###############################################');
-                if (url.startsWith(redirectUrl)) {
-                  Navigator.pop(dialogContext, url);
-                }
-              },
-              onWebResourceError: (WebResourceError error) {},
-              onNavigationRequest: (NavigationRequest request) {
-                if (request.url.startsWith(redirectUrl)) {
-                  return NavigationDecision.prevent;
-                }
-                return NavigationDecision.navigate;
-              },
-            ),
-          )
+          ..setNavigationDelegate(_navigationDelegate)
           ..loadRequest(Uri.parse(authorizationUrl));
         return Scaffold(
           body: SafeArea(
