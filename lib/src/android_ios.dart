@@ -30,7 +30,7 @@ class OpenIdConnectAndroidiOS {
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith(redirectUrl) && Platform.isIOS) {
-              Navigator.of(context).pop(request.url);
+              Navigator.pop(dialogContext, request.url);
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
