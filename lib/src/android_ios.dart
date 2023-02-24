@@ -41,13 +41,14 @@ class OpenIdConnectAndroidiOS {
           ..setNavigationDelegate(_navigationDelegate)
           ..loadRequest(Uri.parse(authorizationUrl));
         return Scaffold(
+          resizeToAvoidBottomInset: true,
           backgroundColor: Color(0xFF56CCF2),
           appBar: AppBar(
             systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Color(0xFF05A1CF),
+                statusBarColor: Colors.transparent,
                 statusBarBrightness: Brightness.dark,
                 statusBarIconBrightness: Brightness.light),
-            backgroundColor: Color(0xFF05A1CF),
+            backgroundColor: Color(0xFFFFFFFF),
             elevation: 0,
             leading: IconButton(
               icon: SvgPicture.asset(
