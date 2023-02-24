@@ -49,6 +49,15 @@ class OpenIdConnectAndroidiOS {
                 statusBarIconBrightness: Brightness.light),
             backgroundColor: Color(0xFF05A1CF),
             elevation: 0,
+            leading: IconButton(
+              icon: SvgPicture.asset(
+                'assets/images/arrow-left.svg',
+                color: Color(0xFF5A647C),
+              ),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+            ),
           ),
           body: SafeArea(
             child: Stack(
