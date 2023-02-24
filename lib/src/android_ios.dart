@@ -41,6 +41,15 @@ class OpenIdConnectAndroidiOS {
           ..setNavigationDelegate(_navigationDelegate)
           ..loadRequest(Uri.parse(authorizationUrl));
         return Scaffold(
+          backgroundColor: Color(0xFF56CCF2),
+          appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Color(0xFF05A1CF),
+                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: Brightness.light),
+            backgroundColor: Color(0xFF05A1CF),
+            elevation: 0,
+          ),
           body: SafeArea(
             child: Stack(
               children: [WebViewWidget(controller: controller)],
