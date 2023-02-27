@@ -55,8 +55,12 @@ class OpenIdConnectAndroidiOS {
                 'assets/images/arrow-left.svg',
                 color: Color(0xFF5A647C),
               ),
-              onPressed: () {
-                Navigator.pop(dialogContext);
+              onPressed: () async {
+                if (await controller.canGoBack()) {
+                  controller.goBack();
+                } else {
+                  Navigator.pop(dialogContext);
+                }
               },
             ),
           ),
