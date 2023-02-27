@@ -48,12 +48,12 @@ class OpenIdConnectAndroidiOS {
                 statusBarColor: Color(0xFF05A1CF),
                 statusBarBrightness: Brightness.dark,
                 statusBarIconBrightness: Brightness.light),
-            backgroundColor: Color(0xFFFFFFFF),
+            backgroundColor: Color(0xFF05A1CF),
             elevation: 0,
             leading: IconButton(
               icon: SvgPicture.asset(
                 'assets/images/arrow-left.svg',
-                color: Color(0xFF5A647C),
+                color: Color(0xFFFFFFFF),
               ),
               onPressed: () async {
                 if (await controller.canGoBack()) {
